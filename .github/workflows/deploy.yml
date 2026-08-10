@@ -37,6 +37,12 @@ jobs:
         run: BASE_PATH="/${GITHUB_REPOSITORY#*/}/" npm run build
 
       - uses: actions/configure-pages@v5
+        with:
+          # Switches Pages to building from this workflow. Without it, Pages
+          # falls back to its branch builder and publishes the repository as-is
+          # — which serves the unbuilt index.html and renders a blank page.
+          enablement: true
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
