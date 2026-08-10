@@ -51,6 +51,30 @@ explanation instead, and **About → Puzzle file** lists every problem it found.
 The note on the About screen is `ABOUT_NOTE` at the top of
 `src/components/SettingsView.tsx`.
 
+## Look and feel
+
+The app is dressed for the month it's showing:
+
+| Month | Accent | Secondary |
+| --- | --- | --- |
+| September | harvest gold | fading summer green |
+| October | pumpkin | Halloween plum |
+| November | cranberry | bronze |
+| December | evergreen | frost periwinkle |
+
+Underneath all four the canvas and the navigation stay lavender, so the season
+changes without the app becoming a different app. Opening a day from another
+month re-dresses everything in that month's colours, so browsing back through
+the season feels like walking back through it.
+
+Every colour comes from a token at the top of `src/styles/app.css`; nothing
+below that hardcodes a hex value, so changing a month is a four-line edit. The
+month is chosen in `src/lib/theme.ts` and applied as `data-month` on the root
+element. Light and dark are both defined for each month.
+
+One typeface throughout — Iowan Old Style, which ships with macOS, falling back
+through Palatino to Georgia. No webfont, so it renders identically offline.
+
 ## Testing before September
 
 The season hasn't started yet, so **About → Testing → "Pretend today is"** sets

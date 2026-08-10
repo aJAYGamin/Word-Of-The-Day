@@ -105,6 +105,36 @@ export const WORDS: WordData = {
     ],
     message: 'Placeholder note for day ten.',
   },
+
+  // One per remaining month, so each month's colour scheme can be previewed
+  // with a real puzzle on screen rather than an empty state.
+  '2026-10-31': {
+    word: 'COSTUME',
+    clues: [
+      'For one night it is more honest than what you usually wear.',
+      'Half the fun is being guessed wrong.',
+      'You knock on doors in it.',
+    ],
+    message: 'Placeholder note for Halloween.',
+  },
+  '2026-11-26': {
+    word: 'GRATITUDE',
+    clues: [
+      'It is easiest to feel and hardest to say out loud.',
+      'A whole holiday was built around remembering to.',
+      'The feeling behind thank you.',
+    ],
+    message: 'Placeholder note for late November.',
+  },
+  '2026-12-25': {
+    word: 'EVERGREEN',
+    clues: [
+      'It refuses to admit the season changed.',
+      'It comes indoors once a year and gets covered in lights.',
+      'A tree that stays green all winter.',
+    ],
+    message: 'Placeholder note for Christmas.',
+  },
 }
 
 export interface WordDataIssue {

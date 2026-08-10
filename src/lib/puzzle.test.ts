@@ -63,7 +63,10 @@ describe('word data', () => {
   })
 
   it('reports a missing day instead of crashing', () => {
-    const result = getEntry('2026-12-25')
+    // Deliberately a date the placeholder set does not cover. Once the real
+    // 122-day list is in, every season date resolves and this asserts the
+    // out-of-range path instead.
+    const result = getEntry('2026-11-05')
     expect(result.ok).toBe(false)
     if (!result.ok) expect(result.reason).toBe('missing')
   })

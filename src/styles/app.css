@@ -1,46 +1,138 @@
 /*
- * Visual direction: warm paper and dusk. Cream ground, deep plum ink, a
- * terracotta accent that only shows up on things she can act on, and a serif
- * for the words themselves so the answer feels printed rather than rendered.
- * Fonts are system stacks on purpose — no network request means it looks
- * identical offline on the plane, in the car, wherever she opens it.
+ * Visual direction: lavender paper, dressed for the month.
+ *
+ * The canvas is always a lavender wash and the navigation always lavender, so
+ * the app has one identity across the whole season. On top of that each month
+ * brings its own accent — harvest gold, pumpkin and plum, cranberry, evergreen
+ * and frost — which colours the things she can act on and little else. The
+ * result changes with the calendar without ever becoming a different app.
+ *
+ * Colour only ever arrives through the tokens below. Nothing further down this
+ * file hardcodes a hex value, which is what makes a month a four-line change.
  */
 
+/*
+ * One typeface everywhere. Iowan Old Style ships with macOS and is the reason
+ * this looks like a printed thing rather than a web page; the rest of the
+ * stack are graceful fallbacks. No webfont means no network request, so it
+ * renders identically offline.
+ */
 :root {
-  --paper: #fdf6ee;
-  --paper-raised: #fffaf5;
-  --ink: #2b1b2f;
-  --ink-soft: #6d5b6a;
-  --line: rgba(43, 27, 47, 0.12);
-  --accent: #d1603d;
-  --accent-soft: #f7e3d8;
-  --gold: #e0a458;
-  --sage: #6f8f72;
-  --sage-soft: #dfe9de;
-  --danger: #b3564b;
-  --shadow: 0 1px 2px rgba(43, 27, 47, 0.06), 0 8px 24px -12px rgba(43, 27, 47, 0.28);
+  --font: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
 
-  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
-  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Lavender is the constant across every month — the canvas, the navigation,
+     the focus rings — so the seasons change around a fixed centre. */
+  --lavender: #7f66b8;
+  --lavender-soft: #e7e0f7;
+  --lavender-wash: #f3f0fa;
 
-  --radius: 16px;
+  --paper: var(--lavender-wash);
+  --paper-raised: #fcfaff;
+  --ink: #291f36;
+  --ink-soft: #695f80;
+  --line: rgba(41, 31, 54, 0.13);
+  --on-accent: #fffaf4;
+
+  --sage: #4f7d5b;
+  --sage-soft: #dcebdd;
+  --danger: #a2403a;
+
+  /* Season palette, replaced per month below. */
+  --accent: #6b54a0;
+  --accent-soft: #e7e1f7;
+  --season: #8e76c0;
+
+  --shadow: 0 1px 2px rgba(41, 31, 54, 0.05), 0 10px 30px -14px rgba(41, 31, 54, 0.3);
+  --radius: 18px;
   --gutter: clamp(1.15rem, 5vw, 1.75rem);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #211320;
-    --paper-raised: #2d1e2c;
-    --ink: #f7ebe0;
-    --ink-soft: #bda9b8;
-    --line: rgba(247, 235, 224, 0.14);
-    --accent: #e8815c;
-    --accent-soft: #45262c;
-    --gold: #e8b473;
-    --sage: #92b795;
-    --sage-soft: #2a3a2d;
-    --danger: #d9776a;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -14px rgba(0, 0, 0, 0.7);
+    --lavender: #b7a2e6;
+    --lavender-soft: #2e2545;
+    --lavender-wash: #171225;
+
+    --paper: var(--lavender-wash);
+    --paper-raised: #221b33;
+    --ink: #f0eafa;
+    --ink-soft: #aea3c6;
+    --line: rgba(240, 234, 250, 0.15);
+    --on-accent: #191223;
+
+    --sage: #86b48d;
+    --sage-soft: #253422;
+    --danger: #d4796e;
+
+    --accent: #b49be8;
+    --accent-soft: #2e2545;
+    --season: #b7a2e6;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px -16px rgba(0, 0, 0, 0.75);
+  }
+}
+
+/* ---------- the four months ---------- */
+
+/* September — the end of summer and the start of the harvest. */
+[data-month='9'] {
+  --accent: #a2661f;
+  --accent-soft: #f4e6d1;
+  --season: #6f8b52;
+  --lavender-wash: #f6f1f7;
+}
+
+/* October — pumpkin, and the plum that shades into the lavender underneath. */
+[data-month='10'] {
+  --accent: #a8461a;
+  --accent-soft: #f7e2d5;
+  --season: #6f4291;
+  --lavender-wash: #f4eff7;
+}
+
+/* November — cranberry and bronze, the last warm month. */
+[data-month='11'] {
+  --accent: #8f3427;
+  --accent-soft: #f6ded9;
+  --season: #86603a;
+  --lavender-wash: #f5eff5;
+}
+
+/* December — evergreen against a cold periwinkle sky. */
+[data-month='12'] {
+  --accent: #245640;
+  --accent-soft: #d9e9df;
+  --season: #5871b4;
+  --lavender-wash: #eef1f8;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-month='9'] {
+    --accent: #e0a05e;
+    --accent-soft: #3a2e1d;
+    --season: #a3c084;
+    --lavender-wash: #1d1722;
+  }
+
+  [data-month='10'] {
+    --accent: #e5793c;
+    --accent-soft: #3d271b;
+    --season: #a886d8;
+    --lavender-wash: #1c1526;
+  }
+
+  [data-month='11'] {
+    --accent: #ce6a54;
+    --accent-soft: #3b211c;
+    --season: #c0946a;
+    --lavender-wash: #1e1522;
+  }
+
+  [data-month='12'] {
+    --accent: #5aa982;
+    --accent-soft: #17301f;
+    --season: #93a9de;
+    --lavender-wash: #141827;
   }
 }
 
@@ -55,14 +147,31 @@ body {
 }
 
 body {
-  background: var(--paper);
+  /* A breath of the month's colour at the top of the page, fading out before
+     it reaches the content. It's what makes October feel like October at a
+     glance, without tinting anything she has to read. */
+  background:
+    radial-gradient(
+      120% 55% at 50% 0%,
+      color-mix(in srgb, var(--accent) 13%, transparent) 0%,
+      transparent 72%
+    ),
+    var(--paper);
+  background-attachment: fixed;
   color: var(--ink);
-  font-family: var(--sans);
+  font-family: var(--font);
   font-size: 17px;
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   /* Keeps the rubber-band overscroll from flashing white on iOS. */
   overscroll-behavior-y: none;
+}
+
+/* One visible focus treatment for everything, in the constant colour. */
+:where(button, input, summary, a):focus-visible {
+  outline: 2px solid var(--lavender);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 button,
@@ -88,12 +197,13 @@ input {
 }
 
 .app__title {
-  font-family: var(--serif);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  /* Generous tracking is what stops a serif set in caps from reading as
+     shouting, and it gives the wordmark some room to breathe. */
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--lavender);
   margin: 0;
 }
 
@@ -123,7 +233,9 @@ input {
   justify-content: center;
   gap: 0.25rem;
   padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  /* Lavender rather than plain paper, so the constant colour is present even
+     on a phone where the rail doesn't exist. */
+  background: color-mix(in srgb, var(--lavender-soft) 82%, transparent);
   backdrop-filter: blur(12px);
   border-top: 1px solid var(--line);
 }
@@ -136,20 +248,22 @@ input {
   padding: 0.6rem 0.25rem;
   border-radius: 12px;
   color: var(--ink-soft);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: color 0.18s ease, background 0.18s ease;
 }
 
+/* Navigation stays lavender in every month — it's the fixed point the
+   seasonal colours move around. */
 .tabs__button.is-active {
   color: var(--ink);
-  background: var(--accent-soft);
+  background: var(--lavender-soft);
 }
 
 /* ---------- shared bits ---------- */
 
 .section-title {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.5rem;
   font-weight: 500;
   margin: 1.5rem 0 0.35rem;
@@ -163,20 +277,24 @@ input {
 .section-sub {
   margin: 0 0 1rem;
   color: var(--ink-soft);
-  font-size: 0.92rem;
+  font-size: 0.97rem;
 }
 
 .button {
   appearance: none;
   border: 0;
   border-radius: 999px;
-  padding: 0.85rem 1.4rem;
+  padding: 0.85rem 1.5rem;
   background: var(--accent);
-  color: #fff;
-  font-size: 0.98rem;
+  /* Not white: in dark mode the accents are light, so the label flips to ink
+     to keep the contrast either way. */
+  color: var(--on-accent);
+  font-size: 1rem;
   font-weight: 500;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: transform 0.12s ease, opacity 0.18s ease;
+  transition: transform 0.12s ease, filter 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .button:active {
@@ -200,11 +318,11 @@ input {
 
 .notice {
   margin: 0.75rem 0 0;
-  padding: 0.7rem 0.9rem;
+  padding: 0.8rem 1rem;
   border-radius: 12px;
   background: var(--paper-raised);
   border: 1px solid var(--line);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   color: var(--ink-soft);
 }
 
@@ -224,7 +342,7 @@ input {
 }
 
 .puzzle__date {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.35rem;
   margin: 0;
 }
@@ -232,12 +350,12 @@ input {
 .timer {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.85rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.92rem;
   font-variant-numeric: tabular-nums;
   color: var(--ink-soft);
   cursor: pointer;
@@ -289,16 +407,18 @@ input {
 
 .clue__number {
   display: block;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  /* Serif small-caps need a little more size and tracking than a sans would
+     to stay crisp. */
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.4rem;
+  color: var(--season);
+  margin-bottom: 0.5rem;
 }
 
 .clue__text {
   margin: 0;
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.22rem;
   line-height: 1.42;
 }
@@ -319,15 +439,19 @@ input {
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 0.85rem 1.2rem;
+  padding: 0.85rem 1.3rem;
   letter-spacing: 0.06em;
   /* 16px minimum stops iOS from zooming the viewport on focus. */
   font-size: 16px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
+/* A soft lavender halo rather than a hard ring — the input is a large pill,
+   and a 2px outline around it read as an error state. */
 .guess__input:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: none;
+  border-color: var(--lavender);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lavender) 22%, transparent);
 }
 
 .guess--wrong {
@@ -383,7 +507,7 @@ input {
 }
 
 .paused-veil__title {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.6rem;
   margin: 0 0 0.35rem;
 }
@@ -399,7 +523,7 @@ input {
 }
 
 .empty__title {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-weight: 500;
   font-size: 1.6rem;
   margin: 0 0 0.5rem;
@@ -428,8 +552,8 @@ input {
 
 .result__eyebrow {
   margin: 0;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  font-size: 0.84rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -445,7 +569,7 @@ input {
 }
 
 .result__word {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-weight: 500;
   font-size: clamp(2.4rem, 13vw, 3.4rem);
   letter-spacing: 0.04em;
@@ -481,13 +605,13 @@ input {
 
 .result__facts dd {
   margin: 0.25rem 0 0;
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.2rem;
   font-variant-numeric: tabular-nums;
 }
 
 .result__message {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.1rem;
   line-height: 1.55;
   color: var(--ink);
@@ -495,15 +619,35 @@ input {
 }
 
 .result__clues {
-  text-align: left;
-  margin-bottom: 1.25rem;
-  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.94rem;
   color: var(--ink-soft);
 }
 
+/* The summary is centred with the rest of the card; the clue list beneath it
+   goes back to reading left-aligned. */
 .result__clues summary {
   cursor: pointer;
   color: var(--accent);
+  list-style: none;
+  text-align: center;
+}
+
+.result__clues summary::-webkit-details-marker {
+  display: none;
+}
+
+.result__clues summary::after {
+  content: ' ▾';
+  font-size: 0.85em;
+}
+
+.result__clues[open] summary::after {
+  content: ' ▴';
+}
+
+.result__clues ol {
+  text-align: left;
 }
 
 .result__clues ol {
@@ -544,7 +688,7 @@ input {
 }
 
 .month__label {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-weight: 500;
   font-size: 1.05rem;
   margin: 0 0 0.6rem;
@@ -559,7 +703,7 @@ input {
 
 .month__weekday {
   text-align: center;
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   color: var(--ink-soft);
   padding-bottom: 0.2rem;
 }
@@ -567,10 +711,10 @@ input {
 .day {
   aspect-ratio: 1;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 11px;
   background: var(--paper-raised);
   color: var(--ink-soft);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
   display: flex;
@@ -614,8 +758,8 @@ input {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.9rem;
-  font-size: 0.8rem;
+  gap: 1rem;
+  font-size: 0.88rem;
   color: var(--ink-soft);
 }
 
@@ -655,20 +799,20 @@ input {
 }
 
 .tile__value {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.9rem;
   margin: 0;
   font-variant-numeric: tabular-nums;
 }
 
 .tile__label {
-  margin: 0.15rem 0 0;
-  font-size: 0.85rem;
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
 }
 
 .tile__hint {
-  margin: 0.1rem 0 0;
-  font-size: 0.75rem;
+  margin: 0.15rem 0 0;
+  font-size: 0.82rem;
   color: var(--ink-soft);
 }
 
@@ -696,7 +840,7 @@ input {
 .bars__fill {
   display: block;
   height: 100%;
-  background: var(--gold);
+  background: var(--season);
   border-radius: 999px;
   transition: width 0.4s ease;
 }
@@ -710,7 +854,7 @@ input {
 /* ---------- settings ---------- */
 
 .about-note {
-  font-family: var(--serif);
+  font-family: var(--font);
   font-size: 1.1rem;
   line-height: 1.6;
   white-space: pre-line;
@@ -733,7 +877,7 @@ input {
 
 .row__hint {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.88rem;
   color: var(--ink-soft);
   margin-top: 0.15rem;
 }
@@ -837,19 +981,30 @@ input {
   .app__main {
     grid-area: main;
     padding: 0;
-    max-width: 620px;
+    /* Roughly 65 characters of this serif — past that, the eye loses the
+       start of the next line. */
+    max-width: 34rem;
   }
 
+  /* The rail is the season's fixed point: a lavender panel that stays put
+     while the accents around it change month to month. */
   .tabs {
     grid-area: nav;
     position: static;
     flex-direction: column;
     align-items: stretch;
     gap: 0.15rem;
-    padding: 1.75rem 0 0;
-    background: none;
+    margin-top: 1.75rem;
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--lavender-soft) 70%, transparent);
     backdrop-filter: none;
     border-top: 0;
+  }
+
+  .tabs__button.is-active {
+    background: var(--paper-raised);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--lavender) 25%, transparent);
   }
 
   .tabs__button {
@@ -927,7 +1082,7 @@ input {
   }
 
   .app__main {
-    max-width: 780px;
+    max-width: 38rem;
   }
 
   .months {

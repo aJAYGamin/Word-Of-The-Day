@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArchiveView } from './components/ArchiveView'
 import { PuzzleView } from './components/PuzzleView'
 import { SettingsView } from './components/SettingsView'
 import { StatsView } from './components/StatsView'
 import { formatShort, isInSeason, SEASON_START } from './lib/dates'
+import { applyTheme } from './lib/theme'
 import { useApp } from './store'
 
 type Tab = 'today' | 'season' | 'stats' | 'about'
@@ -21,6 +22,13 @@ export function App() {
   const [openDate, setOpenDate] = useState<string | null>(null)
 
   const activeDate = openDate ?? today
+
+  // Opening a day from another month re-dresses the whole app in that month's
+  // colours, so browsing back through the season feels like walking back
+  // through it.
+  useEffect(() => {
+    applyTheme(activeDate)
+  }, [activeDate])
 
   const openDay = (date: string) => {
     setOpenDate(date)
