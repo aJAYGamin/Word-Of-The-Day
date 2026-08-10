@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { validateWordData } from '../data/words'
 import { isISODate, SEASON_END, SEASON_START } from '../lib/dates'
-import { exportStore } from '../lib/storage'
+import { exportStore, storageIsPersistent } from '../lib/storage'
 import { useApp } from '../store'
 
 /** Replace this with the real note — it's the first thing she'll read here. */
@@ -13,6 +13,7 @@ export function SettingsView() {
   const { settings } = store
   const fileRef = useRef<HTMLInputElement>(null)
   const [importMessage, setImportMessage] = useState<string | null>(null)
+  const [persistent, setPersistent] = useState<boolean | null>(null)
 
   const issues = validateWordData()
   const dayCount = Object.keys(store.records).length
@@ -22,6 +23,10 @@ export function SettingsView() {
     const id = window.setTimeout(() => setImportMessage(null), 5000)
     return () => window.clearTimeout(id)
   }, [importMessage])
+
+  useEffect(() => {
+    void storageIsPersistent().then(setPersistent)
+  }, [])
 
   const onExport = () => {
     const blob = new Blob([exportStore(store)], { type: 'application/json' })
@@ -62,9 +67,16 @@ export function SettingsView() {
 
       <h3 className="section-title section-title--small">Backup</h3>
       <p className="section-sub">
-        {dayCount} day{dayCount === 1 ? '' : 's'} of history saved on this device. Nothing is sent
-        anywhere, so a backup is the only way it survives a new phone.
+        {dayCount} day{dayCount === 1 ? '' : 's'} of history saved on this computer. Nothing is sent
+        anywhere, so a backup is the only way it survives moving to another one.
       </p>
+      {persistent === false && (
+        <p className="notice">
+          This browser hasn't marked the app's data as protected yet, which means it could be cleared
+          if you go a long stretch without opening it. Installing the app makes that unlikely — and a
+          downloaded backup makes it moot.
+        </p>
+      )}
       <div className="settings__buttons">
         <button type="button" className="button button--ghost" onClick={onExport}>
           Download backup

@@ -85,27 +85,76 @@ add: restoring an old backup can't erase newer results.
 **About → Backup** downloads a JSON file and restores from one. That's the only
 way her history survives a new phone.
 
-## Installing on the desktop
+## Using it on a Mac
 
-Open the app in Chrome or Edge and click the install icon in the address bar
-(Firefox and Safari can run it as a normal window instead). Once installed it
-gets its own window and its own icon, with no browser chrome around it.
+She just opens the URL — there's nothing to clone, install or set up. The whole
+app is static files; her results are saved by the browser on her own machine and
+never leave it.
+
+**Use Chrome, and install it.** Open the URL in Chrome, click the install icon
+in the address bar, and it becomes a real app with its own window and Dock icon.
+This isn't cosmetic — see below.
+
+### Where the data lives, and how it can be lost
+
+Results are kept in the browser's `localStorage`, which is per-browser and
+per-machine. Two consequences worth knowing:
+
+- **Safari deletes it after seven days of not visiting.** Safari clears
+  script-writable storage for sites you haven't opened in a week. If she plays
+  most days nothing happens, but a quiet week could take her history with it.
+  Chrome has no such rule.
+- **A different browser is a different history.** Opening it in Safari after
+  playing in Chrome shows an empty season. Same for a different Mac.
+
+The app asks the browser to mark its data as protected (`navigator.storage
+.persist()`), which Chrome grants to installed apps and frequently-used sites.
+If that request hasn't been granted, the Backup section in About says so.
+
+**About → Backup** downloads a JSON file, and restoring merges rather than
+overwrites. That's the real safety net, and it's the only thing that moves her
+history to another machine.
 
 There are no reminders or notifications of any kind, by design — she opens it
 when she wants to.
 
-## Deploying
+## Deploying to GitHub Pages
 
-`npm run build` produces a static `dist/` that can be hosted anywhere. If it's
-served from a subpath, build with the base path set so the manifest and service
-worker scope match:
+`.github/workflows/deploy.yml` builds, typechecks, tests and publishes on every
+push to `main`. It sets `BASE_PATH` from the repository name automatically, so
+the manifest, service worker scope and asset URLs all line up with the
+`/Word-Of-The-Day/` subpath Pages serves from.
 
-```bash
-BASE_PATH=/Word-Of-The-Day/ npm run build
+**Turn it on:** repository **Settings → Pages → Source: GitHub Actions**, then
+push (or re-run the workflow from the Actions tab). The site lands at:
+
+```
+https://ajaygamin.github.io/Word-Of-The-Day/
 ```
 
-`.github/workflows/deploy.yml` does this automatically on every push to `main`,
-but stays inert until GitHub Pages is switched on under **Settings → Pages →
-Source: GitHub Actions**.
+### Before switching it on
 
-Installing to a home screen requires HTTPS (localhost aside).
+- **Pages needs a public repository** unless you're on a paid GitHub plan. This
+  repository is currently private.
+- **The published site is public either way.** Pages has no password. The URL is
+  obscure, not secret.
+- **The words, clues and personal messages ship inside the JavaScript bundle.**
+  Anyone who opens the URL and looks at the source can read all 122 answers
+  ahead of time. There's no way around that without a backend — it's the cost of
+  a static app that works offline. It doesn't affect her unless she goes
+  looking, but making the repository public additionally makes the source
+  searchable on GitHub.
+
+If you'd rather keep the repository private without paying, Netlify and Vercel
+both deploy from a private repo on their free tiers and give the same kind of
+public URL. The build command is the same; set `BASE_PATH=/` there, since they
+serve from the domain root.
+
+Building it yourself, for any host:
+
+```bash
+BASE_PATH=/Word-Of-The-Day/ npm run build   # subpath
+npm run build                               # domain root
+```
+
+Installing as an app requires HTTPS, which Pages provides (localhost aside).

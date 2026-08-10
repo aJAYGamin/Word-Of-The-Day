@@ -169,6 +169,35 @@ export function saveStore(store: Store, storage: Storage = localStorage): boolea
   }
 }
 
+/**
+ * Asks the browser to exempt this site's data from routine eviction.
+ *
+ * This matters more than it looks. Safari clears script-writable storage —
+ * localStorage included — after seven days without a visit, which would wipe
+ * her history over a quiet week. Chrome grants persistence to installed apps
+ * and frequently-visited sites and then leaves the data alone.
+ *
+ * Failure is silent: the request is advisory, and the backup in Settings is
+ * the real guarantee.
+ */
+export async function requestPersistentStorage(): Promise<boolean> {
+  try {
+    if (!navigator.storage?.persist) return false
+    if (await navigator.storage.persisted()) return true
+    return await navigator.storage.persist()
+  } catch {
+    return false
+  }
+}
+
+export async function storageIsPersistent(): Promise<boolean> {
+  try {
+    return (await navigator.storage?.persisted?.()) ?? false
+  } catch {
+    return false
+  }
+}
+
 export function exportStore(store: Store): string {
   return JSON.stringify({ app: 'word-of-the-day', exportedAt: new Date().toISOString(), ...store }, null, 2)
 }
