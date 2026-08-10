@@ -41,6 +41,15 @@ export function PuzzleView({ date }: { date: string }) {
     setJustSolved(false)
   }, [date])
 
+  // With a real keyboard she can just start typing. On a touch screen this
+  // would throw up the on-screen keyboard and hide half the clue, so it is
+  // limited to fine pointers.
+  useEffect(() => {
+    if (!playable) return
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    inputRef.current?.focus()
+  }, [date, playable])
+
   if (state.kind === 'offseason') {
     return (
       <EmptyDay

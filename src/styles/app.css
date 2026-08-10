@@ -773,6 +773,182 @@ input {
   color: var(--danger);
 }
 
+/* ---------- pointer refinements ---------- */
+
+/*
+ * Hover belongs to mice only. Applying it on touch leaves a "stuck" hover
+ * state on whatever she last tapped.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .button:hover:not(:disabled) {
+    filter: brightness(1.06);
+  }
+
+  .button--ghost:hover:not(:disabled) {
+    background: var(--paper-raised);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    color: var(--ink);
+  }
+
+  .tabs__button:hover {
+    color: var(--ink);
+  }
+
+  .day:not(:disabled):hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .timer:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+}
+
+/* ---------- desktop ---------- */
+
+/*
+ * On a wide screen the bottom tab bar stops making sense — it's a thumb
+ * affordance sitting where no thumb is. The same DOM becomes a two-column
+ * shell: a quiet left rail for identity and navigation, and a reading column
+ * that stays narrow enough for the clues to breathe.
+ */
+@media (min-width: 900px) {
+  body {
+    font-size: 18px;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    grid-template-areas:
+      'brand main'
+      'nav main'
+      'rail main';
+    align-content: start;
+    gap: 0 3.5rem;
+    max-width: 1080px;
+    padding: 3.5rem 2.5rem 4rem;
+  }
+
+  .app__header {
+    grid-area: brand;
+    text-align: left;
+    padding: 0;
+  }
+
+  .app__title {
+    font-size: 1.05rem;
+  }
+
+  .app__nudge {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .app__main {
+    grid-area: main;
+    padding: 0;
+    max-width: 620px;
+  }
+
+  .tabs {
+    grid-area: nav;
+    position: static;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.15rem;
+    padding: 1.75rem 0 0;
+    background: none;
+    backdrop-filter: none;
+    border-top: 0;
+  }
+
+  .tabs__button {
+    flex: none;
+    max-width: none;
+    text-align: left;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  /* The first section heading sits level with the app title, not below it. */
+  .app__main > .archive > .section-title:first-child,
+  .app__main > .stats > .section-title:first-child,
+  .app__main > .settings > .section-title:first-child {
+    margin-top: 0;
+  }
+
+  .puzzle__date {
+    font-size: 1.6rem;
+  }
+
+  .clue__text {
+    font-size: 1.3rem;
+  }
+
+  .clue {
+    padding: 1.35rem 1.5rem;
+  }
+
+  .puzzle__actions {
+    align-items: flex-start;
+  }
+
+  .puzzle__actions > .button {
+    width: auto;
+  }
+
+  .confirm {
+    width: 100%;
+  }
+
+  .confirm__buttons {
+    flex-direction: row;
+  }
+
+  .result {
+    padding: 2.25rem 2rem 2rem;
+  }
+
+  .result__word {
+    font-size: 3.6rem;
+  }
+
+  .tiles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .archive {
+    max-width: none;
+  }
+
+  .month__grid {
+    gap: 7px;
+  }
+
+  .settings__buttons {
+    gap: 0.6rem;
+  }
+}
+
+/* Wider still: the season fits two months side by side instead of scrolling. */
+@media (min-width: 1180px) {
+  .app {
+    max-width: 1240px;
+  }
+
+  .app__main {
+    max-width: 780px;
+  }
+
+  .months {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 2.25rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

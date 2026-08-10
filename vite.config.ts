@@ -20,9 +20,27 @@ export default defineConfig({
         theme_color: '#2b1b2f',
         background_color: '#fdf6ee',
         display: 'standalone',
-        orientation: 'portrait',
+        // No orientation lock: this runs in a resizable desktop window as
+        // often as it runs on a phone.
         start_url: base,
         scope: base,
+        categories: ['games', 'education'],
+        screenshots: [
+          {
+            src: 'screenshot-wide.png',
+            sizes: '1280x800',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: "Today's puzzle on the desktop",
+          },
+          {
+            src: 'screenshot-narrow.png',
+            sizes: '600x1000',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: "Today's puzzle on a phone",
+          },
+        ],
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },

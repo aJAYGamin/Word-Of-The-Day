@@ -36,37 +36,39 @@ export function ArchiveView({ onPick }: { onPick: (date: string) => void }) {
       <h2 className="section-title">The season</h2>
       <p className="section-sub">September through December. Tap any day you have already reached.</p>
 
-      {months.map((month) => (
-        <div key={month.label} className="month">
-          <h3 className="month__label">{month.label}</h3>
-          <div className="month__grid">
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-              <span key={i} className="month__weekday" aria-hidden="true">
-                {day}
-              </span>
-            ))}
-            {Array.from({ length: month.leading }, (_, i) => (
-              <span key={`pad-${i}`} />
-            ))}
-            {month.days.map((date) => {
-              const state = stateFor(date)
-              const disabled = state === 'locked'
-              return (
-                <button
-                  key={date}
-                  type="button"
-                  className={`day day--${state}`}
-                  disabled={disabled}
-                  onClick={() => onPick(date)}
-                  aria-label={`${date}, ${state}`}
-                >
-                  {fromISODate(date).getDate()}
-                </button>
-              )
-            })}
+      <div className="months">
+        {months.map((month) => (
+          <div key={month.label} className="month">
+            <h3 className="month__label">{month.label}</h3>
+            <div className="month__grid">
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                <span key={i} className="month__weekday" aria-hidden="true">
+                  {day}
+                </span>
+              ))}
+              {Array.from({ length: month.leading }, (_, i) => (
+                <span key={`pad-${i}`} />
+              ))}
+              {month.days.map((date) => {
+                const state = stateFor(date)
+                const disabled = state === 'locked'
+                return (
+                  <button
+                    key={date}
+                    type="button"
+                    className={`day day--${state}`}
+                    disabled={disabled}
+                    onClick={() => onPick(date)}
+                    aria-label={`${date}, ${state}`}
+                  >
+                    {fromISODate(date).getDate()}
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <ul className="legend">
         <li>

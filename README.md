@@ -4,8 +4,9 @@ A daily guess-the-word game for one person. One word per day from **September 1
 to December 31, 2026** (122 days), with three clues revealed at her pace, a
 timer she can pause, and a full record of how each day went.
 
-Built as an installable PWA — it goes on a phone home screen and works with no
-connection at all once it's been opened once.
+Built as an installable PWA. It runs as a desktop app — a two-column window
+with sidebar navigation — and the same build still works as a phone home-screen
+app. Either way it works with no connection at all once it's been opened once.
 
 ## Running it
 
@@ -84,18 +85,42 @@ add: restoring an old backup can't erase newer results.
 **About → Backup** downloads a JSON file and restores from one. That's the only
 way her history survives a new phone.
 
-## Reminders, honestly
+## Reminders
 
-A daily reminder is available in Settings, but it is not reliable everywhere:
+**About → Daily reminder** sets a time and fires a real OS notification once a
+day. Clicking it focuses the app. There's a **Send a test notification** button
+so it can be verified rather than trusted.
 
-- **Android / desktop** — a real notification fires once a day, while the app is
-  open or recently used.
-- **iPhone / iPad** — it will not fire. Safari gives web apps no way to schedule
-  local notifications, and with no backend there's no push to send. The app says
-  this on the settings screen rather than pretending.
+The rules it follows:
 
-What does work everywhere is the in-app nudge: opening the app shows that
-today's word is waiting, and warns when a streak is on the line.
+- Once per calendar day, never twice.
+- Never when the day has already been played.
+- Never while she's looking at the app — a popup for something already on
+  screen is just noise. It fires when the window is in the background.
+
+**The one requirement: the app has to be running.** There's no backend, so the
+notification comes from the page itself rather than from a server. In practice
+that means:
+
+- **Desktop** — this works. Install the app (the icon in the browser's address
+  bar), then set it to open at login, and the reminder is there every day
+  without anyone thinking about it. Left as a browser tab it works too, as long
+  as the tab stays open.
+- **iPhone / iPad** — it will not fire, and the settings screen says so. Safari
+  gives web apps no way to schedule local notifications and stops executing when
+  the app is closed. Fixing this properly needs a backend sending web push, to
+  an app installed on the home screen, on iOS 16.4+.
+
+Independent of all that, the in-app nudge works everywhere with no permission
+at all: opening the app shows that today's word is waiting and warns when a
+streak is on the line.
+
+## Installing on the desktop
+
+Open the app in Chrome or Edge and click the install icon in the address bar
+(Firefox and Safari can run it as a normal window instead). Once installed it
+gets its own window, its own icon, and — via the browser's app settings — the
+option to launch at login, which is what makes the daily reminder dependable.
 
 ## Deploying
 
