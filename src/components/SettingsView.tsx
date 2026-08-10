@@ -5,8 +5,8 @@ import { exportStore, storageIsPersistent } from '../lib/storage'
 import { useApp } from '../store'
 
 /** Replace this with the real note — it's the first thing she'll read here. */
-const ABOUT_NOTE = `Placeholder note. Write whatever you want her to find here — why you
-made this, what the words have in common, how long you've been planning it.`
+const ABOUT_NOTE = `This is Word of the Day that is specific to you! I made this as a memory for all the happy moments and experiences we have
+had with each other. Each day is something custom to us and I hope you enjoy every single day! :))`
 
 export function SettingsView() {
   const { store, updateSettings, importJSON, storageHealthy, eraseHistory } = useApp()
