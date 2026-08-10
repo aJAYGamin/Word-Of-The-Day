@@ -35,11 +35,11 @@ layer — so a failure there is worth reading rather than patching around.
   was alive.
 - **Revealing the word is irreversible by design.** It ends the day and logs as
   `revealed`, not `solved`.
-- **Reminders can't be made reliable on iOS without a backend.** Don't add UI
-  that implies otherwise; the settings screen states the limit plainly.
+- **There are deliberately no reminders.** No notifications, no reminder emails,
+  no nudge copy in the app. This was considered and cut on purpose — don't
+  reintroduce it as a "helpful" addition.
 
 ## Testing before September
 
 The season hasn't started, so **About → Testing → "Pretend today is"** overrides
-the app's idea of today. It overrides the date only — reminders still compare
-against the real clock.
+the app's idea of today: which puzzle is current, what's locked, streaks, stats.

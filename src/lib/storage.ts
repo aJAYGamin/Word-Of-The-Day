@@ -7,7 +7,6 @@ const QUARANTINE_PREFIX = 'wotd:corrupt:'
 
 export const DEFAULT_SETTINGS: Settings = {
   sound: false,
-  reminderTime: null,
   previewDate: null,
 }
 
@@ -76,11 +75,8 @@ function coerceProgress(date: string, raw: unknown): DayProgress | null {
 
 function coerceSettings(raw: unknown): Settings {
   const o = isObject(raw) ? raw : {}
-  const reminder =
-    typeof o.reminderTime === 'string' && /^\d{2}:\d{2}$/.test(o.reminderTime) ? o.reminderTime : null
   return {
     sound: o.sound === true,
-    reminderTime: reminder,
     previewDate: isISODate(o.previewDate) ? o.previewDate : null,
   }
 }

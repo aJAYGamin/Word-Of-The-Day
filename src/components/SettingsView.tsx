@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { validateWordData } from '../data/words'
 import { isISODate, SEASON_END, SEASON_START } from '../lib/dates'
-import { detectSupport, isInstalled, permission, requestPermission, sendTestNotification } from '../lib/reminders'
 import { exportStore } from '../lib/storage'
 import { useApp } from '../store'
 
@@ -14,10 +13,6 @@ export function SettingsView() {
   const { settings } = store
   const fileRef = useRef<HTMLInputElement>(null)
   const [importMessage, setImportMessage] = useState<string | null>(null)
-  const [permissionState, setPermissionState] = useState(() => permission())
-  const [testSent, setTestSent] = useState(false)
-  const support = detectSupport()
-  const installed = isInstalled()
 
   const issues = validateWordData()
   const dayCount = Object.keys(store.records).length
@@ -47,16 +42,6 @@ export function SettingsView() {
     )
   }
 
-  const onToggleReminder = async () => {
-    if (settings.reminderTime) {
-      updateSettings({ reminderTime: null })
-      return
-    }
-    const granted = await requestPermission()
-    setPermissionState(granted)
-    updateSettings({ reminderTime: '19:00' })
-  }
-
   return (
     <section className="settings">
       <h2 className="section-title">About this</h2>
@@ -74,60 +59,6 @@ export function SettingsView() {
           onChange={(event) => updateSettings({ sound: event.target.checked })}
         />
       </label>
-
-      <h3 className="section-title section-title--small">Daily reminder</h3>
-      <label className="row">
-        <span>
-          <span className="row__label">Remind me to play</span>
-          <span className="row__hint">
-            {support === 'unsupported-ios'
-              ? "On iPhone and iPad a web app can't schedule notifications — this will only nudge you inside the app when you open it."
-              : 'A desktop notification once a day, as long as the app is running.'}
-          </span>
-        </span>
-        <input type="checkbox" checked={settings.reminderTime !== null} onChange={onToggleReminder} />
-      </label>
-
-      {settings.reminderTime !== null && (
-        <>
-          <label className="row">
-            <span className="row__label">Reminder time</span>
-            <input
-              type="time"
-              value={settings.reminderTime}
-              onChange={(event) => updateSettings({ reminderTime: event.target.value || null })}
-            />
-          </label>
-
-          {permissionState === 'denied' ? (
-            <p className="notice notice--warn">
-              Notifications are blocked for this site in your browser settings. The in-app nudge still
-              works, but nothing will pop up.
-            </p>
-          ) : permissionState === 'granted' ? (
-            <>
-              <div className="settings__buttons">
-                <button
-                  type="button"
-                  className="button button--ghost"
-                  onClick={() => setTestSent(sendTestNotification())}
-                >
-                  {testSent ? 'Sent — check your notifications' : 'Send a test notification'}
-                </button>
-              </div>
-              {support === 'supported' && !installed && (
-                <p className="notice">
-                  This only fires while the app is open. Install it — the icon in the address bar — and
-                  set it to open at login, and the reminder will be there every day without you
-                  thinking about it.
-                </p>
-              )}
-            </>
-          ) : (
-            <p className="notice">Allow notifications when your browser asks, or nothing will appear.</p>
-          )}
-        </>
-      )}
 
       <h3 className="section-title section-title--small">Backup</h3>
       <p className="section-sub">

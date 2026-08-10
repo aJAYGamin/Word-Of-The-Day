@@ -50,8 +50,6 @@ export interface DayProgress {
 
 export interface Settings {
   sound: boolean
-  /** "HH:MM" for the daily reminder, or null when off. */
-  reminderTime: string | null
   /** Testing aid: pretend today is this date. Null in normal use. */
   previewDate: string | null
 }

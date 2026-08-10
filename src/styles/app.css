@@ -97,12 +97,6 @@ input {
   margin: 0;
 }
 
-.app__nudge {
-  margin: 0.4rem 0 0;
-  font-size: 0.9rem;
-  color: var(--accent);
-}
-
 .app__main {
   flex: 1;
   padding: 0.75rem var(--gutter) 6.5rem;
@@ -838,12 +832,6 @@ input {
 
   .app__title {
     font-size: 1.05rem;
-  }
-
-  .app__nudge {
-    margin-top: 0.75rem;
-    font-size: 0.95rem;
-    line-height: 1.4;
   }
 
   .app__main {

@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ArchiveView } from './components/ArchiveView'
 import { PuzzleView } from './components/PuzzleView'
 import { SettingsView } from './components/SettingsView'
 import { StatsView } from './components/StatsView'
 import { formatShort, isInSeason, SEASON_START } from './lib/dates'
-import { maybeNotify } from './lib/reminders'
 import { useApp } from './store'
 
 type Tab = 'today' | 'season' | 'stats' | 'about'
@@ -17,19 +16,11 @@ const TABS: { id: Tab; label: string }[] = [
 ]
 
 export function App() {
-  const { today, store, stats } = useApp()
+  const { today } = useApp()
   const [tab, setTab] = useState<Tab>('today')
   const [openDate, setOpenDate] = useState<string | null>(null)
 
   const activeDate = openDate ?? today
-  const playedToday = Boolean(store.records[today])
-
-  // Best-effort daily nudge. Silently does nothing where the OS won't allow it.
-  useEffect(() => {
-    maybeNotify(store.settings.reminderTime, playedToday)
-    const id = window.setInterval(() => maybeNotify(store.settings.reminderTime, playedToday), 60_000)
-    return () => window.clearInterval(id)
-  }, [store.settings.reminderTime, playedToday])
 
   const openDay = (date: string) => {
     setOpenDate(date)
@@ -43,13 +34,6 @@ export function App() {
     <div className="app">
       <header className="app__header">
         <h1 className="app__title">Word of the Day</h1>
-        {!playedToday && seasonStarted && tab === 'today' && !openDate && (
-          <p className="app__nudge">
-            {stats.currentStreak > 0
-              ? `${stats.currentStreak}-day streak on the line.`
-              : "Today's word is waiting."}
-          </p>
-        )}
       </header>
 
       <main className="app__main">
