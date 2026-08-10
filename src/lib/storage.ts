@@ -170,6 +170,28 @@ export function saveStore(store: Store, storage: Storage = localStorage): boolea
 }
 
 /**
+ * Erases every trace of saved play.
+ *
+ * This has to remove the rolling backup and any quarantined copies as well as
+ * the live key. Clearing only the live key would leave `loadStore` free to
+ * recover the "deleted" history from its fallback on the very next load — a
+ * delete that undoes itself is worse than no delete at all.
+ */
+export function clearAll(storage: Storage = localStorage): boolean {
+  try {
+    const doomed = [KEY, BACKUP_KEY]
+    for (let i = 0; i < storage.length; i += 1) {
+      const key = storage.key(i)
+      if (key?.startsWith(QUARANTINE_PREFIX)) doomed.push(key)
+    }
+    for (const key of doomed) storage.removeItem(key)
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
  * Asks the browser to exempt this site's data from routine eviction.
  *
  * This matters more than it looks. Safari clears script-writable storage —

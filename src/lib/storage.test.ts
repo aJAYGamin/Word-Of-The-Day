@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { emptyStore, loadStore, mergeStores, parseStore, saveStore } from './storage'
+import { clearAll, emptyStore, loadStore, mergeStores, parseStore, saveStore } from './storage'
 import type { DayRecord, Store } from './types'
 
 /** Minimal in-memory Storage so these tests run without a DOM. */
@@ -104,6 +104,28 @@ describe('loadStore / saveStore', () => {
   it('reports failure rather than throwing when storage is unavailable', () => {
     storage.failWrites = true
     expect(saveStore(emptyStore(), storage)).toBe(false)
+  })
+})
+
+describe('clearAll', () => {
+  it('leaves nothing for loadStore to recover', () => {
+    // Two writes, so the backup slot holds a real previous version.
+    saveStore({ ...emptyStore(), records: { '2026-09-01': record('2026-09-01') } }, storage)
+    saveStore({ ...emptyStore(), records: { '2026-09-02': record('2026-09-02') } }, storage)
+    storage.setItem('wotd:corrupt:123', '<<garbage>>')
+
+    expect(clearAll(storage)).toBe(true)
+
+    // The fallback path must not resurrect the erased season.
+    expect(loadStore(storage).records).toEqual({})
+    expect(storage.getItem('wotd:store:v1')).toBeNull()
+    expect(storage.getItem('wotd:store:v1:backup')).toBeNull()
+    expect(storage.getItem('wotd:corrupt:123')).toBeNull()
+  })
+
+  it('is safe to run when there is nothing saved', () => {
+    expect(clearAll(storage)).toBe(true)
+    expect(loadStore(storage).records).toEqual({})
   })
 })
 

@@ -11,7 +11,7 @@ import {
 import { getEntry } from './data/words'
 import { isInSeason, todayISO } from './lib/dates'
 import { isCorrectGuess } from './lib/normalize'
-import { loadStore, mergeStores, parseStore, saveStore } from './lib/storage'
+import { clearAll, emptyStore, loadStore, mergeStores, parseStore, saveStore } from './lib/storage'
 import { computeStats, type Stats } from './lib/stats'
 import { elapsedMs, newTimer, pause, resume, tick } from './lib/timer'
 import type { DayProgress, DayRecord, Settings, Store } from './lib/types'
@@ -36,6 +36,7 @@ interface AppValue {
   setPaused: (date: string, paused: boolean) => void
   updateSettings: (patch: Partial<Settings>) => void
   importJSON: (text: string) => { ok: true; added: number } | { ok: false; error: string }
+  eraseHistory: () => void
 }
 
 const AppContext = createContext<AppValue | null>(null)
@@ -186,6 +187,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setStore((current) => ({ ...current, settings: { ...current.settings, ...patch } }))
   }, [])
 
+  /**
+   * Wipes the saved season. The stored keys are cleared first, so that when
+   * the state change lands the save routine finds nothing to copy into the
+   * backup slot — otherwise the erased history would survive there.
+   */
+  const eraseHistory = useCallback(() => {
+    clearAll()
+    setStore((current) => ({ ...emptyStore(), settings: current.settings }))
+  }, [])
+
   const importJSON = useCallback((text: string) => {
     try {
       const incoming = parseStore(JSON.parse(text))
@@ -260,6 +271,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPaused,
       updateSettings,
       importJSON,
+      eraseHistory,
     }),
     [
       store,
@@ -274,6 +286,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPaused,
       updateSettings,
       importJSON,
+      eraseHistory,
     ],
   )
 

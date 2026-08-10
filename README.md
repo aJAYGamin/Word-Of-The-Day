@@ -139,6 +139,11 @@ If that request hasn't been granted, the Backup section in About says so.
 overwrites. That's the real safety net, and it's the only thing that moves her
 history to another machine.
 
+**About → Start over** erases everything and hands back an empty season, behind
+a confirmation. It clears the rolling backup and any quarantined copies as well
+as the live data — a delete that the recovery path could quietly undo would be
+worse than none at all.
+
 There are no reminders or notifications of any kind, by design — she opens it
 when she wants to.
 
