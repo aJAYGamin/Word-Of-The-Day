@@ -85,10 +85,77 @@ add: restoring an old backup can't erase newer results.
 **About → Backup** downloads a JSON file and restores from one. That's the only
 way her history survives a new phone.
 
-## Reminders
+## The daily email
 
-**About → Daily reminder** sets a time and fires a real OS notification once a
-day. Clicking it focuses the app. There's a **Send a test notification** button
+The reminder that needs nothing from her: an email arrives every morning with
+the date, which day of the season it is, the first clue, and a button that opens
+the app. No permission prompt, no install, no setup on her side — it just shows
+up in Gmail wherever she is.
+
+It's written as a delivery ("here's today's word"), not a nag ("you forgot"), so
+it can be sent unconditionally. That matters more than it sounds: it means the
+sender never has to know whether she's played, so **her history stays entirely
+on her device** and nothing about her progress is ever transmitted.
+
+`.github/workflows/daily-reminder.yml` runs `scripts/send-reminder.ts` once a
+day through GitHub Actions. It sends through Gmail's SMTP, so the mail comes
+from your own address — it lands in her inbox from you, not from a service.
+
+### One-time setup
+
+1. **Turn on 2-Step Verification** for the Gmail account you're sending from,
+   then create an **App Password** at <https://myaccount.google.com/apppasswords>.
+   This is a 16-character password specific to this app; your real password
+   won't work and shouldn't be used.
+2. In the repo, under **Settings → Secrets and variables → Actions**, add three
+   **secrets**:
+   - `SMTP_USER` — the Gmail address sending the mail
+   - `SMTP_PASS` — the App Password from step 1
+   - `REMINDER_TO` — her email address
+3. On the **Variables** tab of the same page, add:
+   - `APP_URL` — where the app is hosted
+   - `REMINDER_TZ` — her timezone, e.g. `America/New_York`, so "today" means
+     today where she is
+   - `FROM_NAME` — optional; the name the email appears from
+4. Edit the `cron:` line in the workflow. **GitHub runs cron in UTC**, so pick
+   the UTC time matching her morning: 9am US Eastern is `0 13 * * *` in summer
+   and `0 14 * * *` after the clocks change; 9am UK is `0 8 * * *`; 9am India is
+   `30 3 * * *`.
+5. Fire a test from the **Actions** tab → **Daily reminder** → **Run workflow**.
+
+Secrets are never printed and never committed — her address lives in GitHub's
+secret store, not in this repository.
+
+### Previewing an email locally
+
+```bash
+SMTP_USER=you@gmail.com SMTP_PASS=your-app-password \
+REMINDER_TO=you@gmail.com APP_URL=http://localhost:4173/ \
+REMINDER_DATE=2026-09-03 npm run reminder
+```
+
+`REMINDER_DATE` forces a specific day so you can see a real email before
+September. Leave it unset in normal operation. Outside the season the script
+sends nothing and says so.
+
+### Worth knowing
+
+- **Scheduled runs drift.** GitHub's cron can be a few minutes late under load.
+  Fine for a daily nudge, not something to build a surprise around.
+- **GitHub disables scheduled workflows after 60 days of repository
+  inactivity**, which would end the emails mid-season without warning. The
+  workflow guards against this by committing a heartbeat on the 1st of each
+  month. If GitHub ever emails you about a workflow being disabled, re-enable it
+  from the Actions tab.
+- **If a day's puzzle is missing**, the email still sends without a clue and the
+  workflow run is annotated with a warning, so the gap gets noticed.
+
+## In-app notifications (the desktop extra)
+
+**About → Daily reminder** also fires a real OS notification once a day, for
+when the app is already running on a desktop. This is separate from the email
+and needs her permission; the email is the one that needs nothing.
+Clicking it focuses the app, and there's a **Send a test notification** button
 so it can be verified rather than trusted.
 
 The rules it follows:
@@ -108,8 +175,8 @@ that means:
   as the tab stays open.
 - **iPhone / iPad** — it will not fire, and the settings screen says so. Safari
   gives web apps no way to schedule local notifications and stops executing when
-  the app is closed. Fixing this properly needs a backend sending web push, to
-  an app installed on the home screen, on iOS 16.4+.
+  the app is closed. **This is what the daily email is for** — it reaches her
+  phone regardless, with nothing to install and nothing to allow.
 
 Independent of all that, the in-app nudge works everywhere with no permission
 at all: opening the app shows that today's word is waiting and warns when a
