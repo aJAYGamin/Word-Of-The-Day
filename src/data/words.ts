@@ -21,13 +21,13 @@ import type { DayEntry, WordData } from '../lib/types'
  */
 export const WORDS: WordData = {
   '2026-09-01': {
-    word: 'SUNSET',
+    word: 'Feed My Starving Children',
     clues: [
-      'It happens every evening, but never quite the same way twice.',
-      'Orange bleeding into pink, and then into dark.',
-      'The opposite of sunrise.',
+      'This is a famous charity that you know of',
+      'The place we first met in person',
+      'Volunteers hand-pack meals that are sent to communities in need',
     ],
-    message: 'Placeholder note — day one. Replace me with something real.',
+    message: 'Im glad to have met you in such a good hearted place!',
   },
   '2026-09-02': {
     word: 'COMPASS',
